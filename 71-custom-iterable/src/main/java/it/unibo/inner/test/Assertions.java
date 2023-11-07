@@ -46,6 +46,7 @@ public final class Assertions {
         var counter = 0L;
         for (var elem : iter) {
             counter++;
+            
         }
         return counter;
     }

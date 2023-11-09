@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A special utility class with methods that transform collections using {@link Function}s provided as parameters.
@@ -54,7 +55,14 @@ public final class Transformers {
      * @param <O> output elements type
      */
     public static <I, O> List<O> transform(final Iterable<I> base, final Function<I, O> transformer) {
-        return null;
+        return new ArrayList<O>(flattenTransform(base, new Function<I,Set<O>>(){
+
+            @Override
+            public Set<O> call(I input) {
+                return Set.of(transformer.call(input));
+            }
+
+        }));
     }
 
     /**
@@ -70,7 +78,7 @@ public final class Transformers {
      * @param <I> type of the collection elements
      */
     public static <I> List<? extends I> flatten(final Iterable<? extends Collection<? extends I>> base) {
-        return null;
+        return new ArrayList<I>(flattenTransform(base, Function.identity()));
     }
 
     /**
@@ -87,14 +95,24 @@ public final class Transformers {
      * @param <I> elements type
      */
     public static <I> List<I> select(final Iterable<I> base, final Function<I, Boolean> test) {
-        return null;
+        return new ArrayList<I>(flattenTransform(base, new Function<I,Collection<I>>(){
+
+            @Override
+            public Collection<I> call(I input) {
+                if (test.call(input)) {
+                    return Set.of(input);
+                }
+                return Set.of();
+            }
+
+        }));
     }
 
     /**
      * A function that applies a test to each element of an {@link Iterable}, returning a list containing only the
      * elements that do not pass the test.
      * For instance, {@code [1, 2, 3, 4, 5]} could use {@code select} to reject all the even numbers, thus obtaining
-     * {@code [1, 3, 5]}.
+     * {@code [2, 4]}.
      * <b>NOTE:</b> this function is a special select whose test function return value is negated.
      *
      * @param base the elements on which to operate
@@ -103,6 +121,17 @@ public final class Transformers {
      * @param <I> elements type
      */
     public static <I> List<I> reject(final Iterable<I> base, final Function<I, Boolean> test) {
-        return null;
+        return new ArrayList<I>(flattenTransform(base, new Function<I,Collection<I>>(){
+
+            @Override
+            public Collection<I> call(I input) {
+                if (!test.call(input)) {
+                    return Set.of(input);
+                }
+                return Set.of();
+            }
+
+        }));
     }
+
 }

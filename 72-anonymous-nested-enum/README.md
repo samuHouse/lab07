@@ -11,6 +11,7 @@ tramite una classe anonima.
 Si osservi `TestFunctionalLibrary` per trovare esempi di classi anonime che implementano function.
 Ci si prepari a rispondere alla seguente domanda al momento della correzione:
 > perché `identity()` è un metodo, e non una costante `public static`?
+- perché un'identità non può essere costante, deve poter restituire un'output per ogni input possibile 
 
 ## Parte 2: sfruttare le classi anonime per costruire una libreria funzionale
 
